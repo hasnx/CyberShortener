@@ -1,11 +1,11 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
-import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue';
-import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue';
-import SectionBorder from '@/Components/SectionBorder.vue';
-import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue';
-import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue';
-import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue';
+import { Link } from "@inertiajs/vue3";
+import CyberpunkLayout from "@/Layouts/CyberpunkLayout.vue";
+import DeleteUserForm from "./Partials/DeleteUserForm.vue";
+import LogoutOtherBrowserSessionsForm from "./Partials/LogoutOtherBrowserSessionsForm.vue";
+import TwoFactorAuthenticationForm from "./Partials/TwoFactorAuthenticationForm.vue";
+import UpdatePasswordForm from "./Partials/UpdatePasswordForm.vue";
+import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm.vue";
 
 defineProps({
     confirmsTwoFactorAuthentication: Boolean,
@@ -14,44 +14,122 @@ defineProps({
 </script>
 
 <template>
-    <AppLayout title="Profile">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Profile
-            </h2>
-        </template>
-
-        <div>
-            <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <div v-if="$page.props.jetstream.canUpdateProfileInformation">
-                    <UpdateProfileInformationForm :user="$page.props.auth.user" />
-
-                    <SectionBorder />
+    <CyberpunkLayout>
+        <div class="max-w-7xl mx-auto py-10 space-y-8">
+            <!-- Profile Header -->
+            <div class="cyber-panel">
+                <div class="cyber-panel-header">
+                    <span class="text-yellow-400">[</span>
+                    PROFILE_SETTINGS
+                    <span class="text-yellow-400">]</span>
                 </div>
+            </div>
 
-                <div v-if="$page.props.jetstream.canUpdatePassword">
-                    <UpdatePasswordForm class="mt-10 sm:mt-0" />
-
-                    <SectionBorder />
+            <!-- Profile Information -->
+            <div class="cyber-panel">
+                <div class="cyber-panel-header">
+                    <span class="text-yellow-400">[</span>
+                    PROFILE_INFO
+                    <span class="text-yellow-400">]</span>
                 </div>
-
-                <div v-if="$page.props.jetstream.canManageTwoFactorAuthentication">
-                    <TwoFactorAuthenticationForm
-                        :requires-confirmation="confirmsTwoFactorAuthentication"
-                        class="mt-10 sm:mt-0"
+                <div class="cyber-panel-content">
+                    <UpdateProfileInformationForm
+                        :user="$page.props.auth.user"
                     />
-
-                    <SectionBorder />
                 </div>
+            </div>
 
-                <LogoutOtherBrowserSessionsForm :sessions="sessions" class="mt-10 sm:mt-0" />
+            <!-- Update Password -->
+            <div class="cyber-panel">
+                <div class="cyber-panel-header">
+                    <span class="text-yellow-400">[</span>
+                    UPDATE_PASSWORD
+                    <span class="text-yellow-400">]</span>
+                </div>
+                <div class="cyber-panel-content">
+                    <UpdatePasswordForm />
+                </div>
+            </div>
 
-                <template v-if="$page.props.jetstream.hasAccountDeletionFeatures">
-                    <SectionBorder />
+            <!-- Two Factor Authentication -->
+            <div class="cyber-panel">
+                <div class="cyber-panel-header">
+                    <span class="text-yellow-400">[</span>
+                    2FA_SECURITY
+                    <span class="text-yellow-400">]</span>
+                </div>
+                <div class="cyber-panel-content">
+                    <TwoFactorAuthenticationForm
+                        :confirms-password="confirmsTwoFactorAuthentication"
+                    />
+                </div>
+            </div>
 
-                    <DeleteUserForm class="mt-10 sm:mt-0" />
-                </template>
+            <!-- Browser Sessions -->
+            <div class="cyber-panel">
+                <div class="cyber-panel-header">
+                    <span class="text-yellow-400">[</span>
+                    BROWSER_SESSIONS
+                    <span class="text-yellow-400">]</span>
+                </div>
+                <div class="cyber-panel-content">
+                    <LogoutOtherBrowserSessionsForm :sessions="sessions" />
+                </div>
+            </div>
+
+            <!-- Delete Account -->
+            <div class="cyber-panel border-red-500">
+                <div class="cyber-panel-header text-red-400">
+                    <span class="text-red-400">[</span>
+                    DANGER_ZONE
+                    <span class="text-red-400">]</span>
+                </div>
+                <div class="cyber-panel-content">
+                    <DeleteUserForm />
+                </div>
             </div>
         </div>
-    </AppLayout>
+    </CyberpunkLayout>
 </template>
+
+<style scoped>
+.cyber-panel {
+    @apply bg-gray-900 border border-yellow-400 rounded-lg overflow-hidden;
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.1);
+    position: relative;
+}
+
+.cyber-panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(251, 191, 36, 0.5),
+        transparent
+    );
+}
+
+.cyber-panel-header {
+    @apply px-6 py-3 bg-gray-800 text-gray-100 font-bold tracking-wider uppercase text-lg;
+    border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.cyber-panel-content {
+    @apply p-6;
+}
+
+/* Special styling for danger zone */
+.cyber-panel.border-red-500::before {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(239, 68, 68, 0.5),
+        transparent
+    );
+}
+</style>

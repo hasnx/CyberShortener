@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\LinkController;
+use App\Http\Controllers\DashboardController;
 
 // Homepage route
 Route::get('/', [LinkController::class, 'index'])->name('home');
@@ -14,9 +15,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/my-links', [LinkController::class, 'userLinks'])->name('links.user');
     Route::post('/links', [LinkController::class, 'store'])->name('links.store');
