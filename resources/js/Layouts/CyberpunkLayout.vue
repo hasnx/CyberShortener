@@ -6,6 +6,15 @@
                 <h1 class="text-2xl font-bold text-yellow-400 glitch">
                     CyberShortener
                 </h1>
+                <div class="flex items-center space-x-4">
+                    <Link
+                        v-if="$page.props.auth.user"
+                        :href="route('links.user')"
+                        class="text-blue-300 hover:text-yellow-400 transition-colors duration-300"
+                    >
+                        My Links
+                    </Link>
+                </div>
             </div>
         </nav>
 

@@ -8,7 +8,7 @@ use App\Http\Controllers\LinkController;
 // Homepage route
 Route::get('/', [LinkController::class, 'index'])->name('home');
 
-// Dashboard route (authenticated users)
+// Authenticated routes
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -17,9 +17,15 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::get('/my-links', [LinkController::class, 'userLinks'])->name('links.user');
+    Route::post('/links', [LinkController::class, 'store'])->name('links.store');
+    Route::delete('/links/{link}', [LinkController::class, 'destroy'])->name('links.destroy');
 });
 
-// URL Shortener routes (keep these last to prevent conflicts)
-Route::post('/links', [LinkController::class, 'store'])->name('links.store');
-Route::get('/{shortCode}', [LinkController::class, 'redirect'])->name('links.redirect');
+// Public routes
 Route::get('/stats/{shortCode}', [LinkController::class, 'stats'])->name('links.stats');
+Route::get('/{shortCode}', [LinkController::class, 'redirect'])->name('links.redirect');
+Route::post('/links/{link}/verify-password', [LinkController::class, 'verifyPassword'])
+    ->name('links.verify-password');
+Route::post('/p/{shortCode}', [LinkController::class, 'checkPassword'])->name('links.check-password');

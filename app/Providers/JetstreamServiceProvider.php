@@ -11,6 +11,7 @@ use App\Actions\Jetstream\RemoveTeamMember;
 use App\Actions\Jetstream\UpdateTeamName;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Jetstream\Jetstream;
+use Illuminate\Support\Facades\Navigation;
 
 class JetstreamServiceProvider extends ServiceProvider
 {
@@ -57,5 +58,13 @@ class JetstreamServiceProvider extends ServiceProvider
             'create',
             'update',
         ])->description('Editor users have the ability to read, create, and update.');
+    }
+
+    protected function configureMenu()
+    {
+        Navigation::define([
+            Navigation::item('Dashboard')->route('dashboard')->icon('dashboard'),
+            Navigation::item('My Links')->route('links.user')->icon('link'),
+        ]);
     }
 }
