@@ -22,3 +22,4 @@ Route::middleware([
 // URL Shortener routes (keep these last to prevent conflicts)
 Route::post('/links', [LinkController::class, 'store'])->name('links.store');
 Route::get('/{shortCode}', [LinkController::class, 'redirect'])->name('links.redirect');
+Route::get('/stats/{shortCode}', [LinkController::class, 'stats'])->name('links.stats');

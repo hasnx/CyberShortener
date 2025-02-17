@@ -21,10 +21,21 @@ const props = defineProps({
 const copied = ref(false);
 
 const copyToClipboard = async () => {
-    await navigator.clipboard.writeText(props.text);
-    copied.value = true;
-    setTimeout(() => {
-        copied.value = false;
-    }, 2000);
+    console.log("Copying text:", props.text);
+
+    if (!props.text) {
+        console.error("No text to copy");
+        return;
+    }
+
+    try {
+        await navigator.clipboard.writeText(props.text);
+        copied.value = true;
+        setTimeout(() => {
+            copied.value = false;
+        }, 2000);
+    } catch (err) {
+        console.error("Failed to copy:", err);
+    }
 };
 </script>
