@@ -3,16 +3,12 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\LinkController;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Homepage route
+Route::get('/', [LinkController::class, 'index'])->name('home');
 
+// Dashboard route (authenticated users)
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -22,3 +18,7 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+// URL Shortener routes (keep these last to prevent conflicts)
+Route::post('/links', [LinkController::class, 'store'])->name('links.store');
+Route::get('/{shortCode}', [LinkController::class, 'redirect'])->name('links.redirect');
